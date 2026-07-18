@@ -13,22 +13,70 @@ AIGC:
 
 ---
 
-# V19 Governance Protocol Specification — Independent Release
+# V19 Governance Protocol Specification
 
-**Version 1.0.0** | **2026-07-17**
+**Version 1.0.0** | **2026-07-17** | CC-BY-4.0
 
-## Overview
+> **Independent release** — originally part of the V19 cognitive architecture, now available as a standalone specification.
 
-The V19 Governance Protocol is a meta-governance system designed for multi-agent cognitive architectures. It provides a unified interface for auditing, policy enforcement, trust scoring, causal tracing, conflict resolution, and self-healing across distributed agent ecosystems.
+---
 
-This is the **independent release** of the governance protocol specification, originally published as part of the V19 cognitive architecture. It is now available as a standalone document under the **CC-BY-4.0** license, enabling broader adoption, adaptation, and contribution by the community.
+## Why This Exists
+
+AI coding agents generate code faster than traditional review cycles can handle. Cursor, Copilot, Claude Code — they all produce thousands of lines per session. But the security tooling hasn't caught up.
+
+**Traditional SAST (regex-based)** finds known patterns:
+- Hardcoded secrets (`api_key = "sk-xxx"`)
+- SQL injection (`SELECT * FROM`)
+- Path traversal (`../`)
+
+**It cannot find semantic vulnerabilities** — problems that span multiple modules, involve runtime state, or require understanding code *intent* rather than just code *text*.
+
+## Case Study: Grok Build Audit
+
+When xAI open-sourced Grok Build CLI, the community focused on External Telemetry privacy concerns. We audited the 2,761-file codebase using a local LLM (Ollama qwen2.5:7b). The result was counterintuitive:
+
+**External Telemetry was the best-designed module** — fail-closed, attribute allowlist, dual-channel isolation. The real problems were elsewhere.
+
+### Three HIGH Findings
+
+| ID | Module | Finding | Type |
+|:--:|--------|---------|:----:|
+| H-1 | `managed_mcp.rs` | MCP credentials cached in `ManagedMcpCache` — no zeroize over process lifetime | Credential lifecycle |
+| H-2 | `subagent_coordinator.rs` | Sub-agent inherits full parent environment — can read `session_key` | Permission inheritance |
+| H-3 | `agent_ops.rs` | `api_key_auth_disabled()` is a runtime toggle — no alert, no log when auth is silently disabled | Auth bypass |
+
+### Why Regex Can't Find H-2
+
+H-2 is not a line of code like `password = "xxx"`. It's a chain:
+
+```
+parent Agent → auth_manager.current_or_expired() → session_key
+            → build_summary_client() → SamplingConfig.bearer_resolver
+            → subagent inherits env vars → bearer_resolver callback → credential leak
+```
+
+This crosses **3 modules** and involves **runtime state inheritance**. No regex pattern can match it.
+
+### Audit Track Record
+
+| Metric | Value |
+|--------|-------|
+| Modules audited | 42 (35 SAE + 7 Grok) |
+| Total findings | 306 |
+| HIGH severity | 28 |
+| Architecture layers covered | 10 (BCN, PRD, Cognition, Protocol, Trust, Evolution, Agent, EIF, Diagnosis, Audit) |
+| Engine | Ollama qwen2.5:7b (fully local) |
+| Data security | Code never leaves local machine |
+
+---
 
 ## What's Included
 
 | File | Description |
 |------|-------------|
-| [`governance-protocol-spec.md`](./governance-protocol-spec.md) | Complete protocol specification (20 sections, covering API endpoints, authentication, PMI scoring, policy engine, repair system, and more) |
-| [`LICENSE.txt`](./LICENSE.txt) | Full text of the Creative Commons Attribution 4.0 International license |
+| [`governance-protocol-spec.md`](./governance-protocol-spec.md) | Complete protocol specification (20 sections, 90+ KB) |
+| [`LICENSE.txt`](./LICENSE.txt) | CC-BY-4.0 license |
 
 ## Protocol at a Glance
 
@@ -42,27 +90,12 @@ This is the **independent release** of the governance protocol specification, or
 
 ## License
 
-This specification is licensed under the **Creative Commons Attribution 4.0 International** license (CC-BY-4.0).
-
-You are free to:
-- **Share** — copy and redistribute the material in any medium or format
-- **Adapt** — remix, transform, and build upon the material for any purpose, even commercially
-
-Under the following terms:
-- **Attribution** — You must give appropriate credit to the V19 Governance Protocol Contributors, provide a link to the license, and indicate if changes were made.
-
-See [LICENSE.txt](./LICENSE.txt) for the full legal text.
+**CC-BY-4.0** — Share and adapt for any purpose, even commercially, with attribution.
 
 ## Repository
 
-- **Primary**: https://github.com/V19-Governance/governance-spec
-- **Canonical URL** (placeholder): https://github.com/V19-Governance/governance-spec
-
-## Prior Publication
-
-This specification was previously hosted on the ClawHub Marketplace as `v19-governance-protocol-spec`. As of this release, the specification is fully independent and no longer depends on ClawHub for distribution or access.
+- **Primary**: https://github.com/Liuyanfeng1234/governance-spec
 
 ---
 
-> **Disclaimer**: This specification describes a working system. API endpoints and module availability may vary depending on the deployment environment. The document reflects the V19 v2.5.2 Cross-Analysis Edition implementation.
-*（内容由AI生成，仅供参考）*
+> **Disclaimer**: This specification describes a working system. API endpoints and module availability may vary depending on the deployment environment.
