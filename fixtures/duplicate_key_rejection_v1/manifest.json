@@ -1,0 +1,49 @@
+{
+  "schema": "duplicate-key-rejection/v1",
+  "purpose": "Reject duplicate JSON property names before RFC 8785/JCS canonicalization.",
+  "normative_reference": {
+    "name": "RFC 8785",
+    "section": "3.1",
+    "requirement": "JSON objects used as input data must not exhibit duplicate property names."
+  },
+  "expected_behavior": "reject-before-canonicalization",
+  "forbidden_outputs": [
+    "canonical_bytes",
+    "digest",
+    "admission_hash",
+    "anchoring_hash",
+    "signature"
+  ],
+  "cases": [
+    {
+      "id": "direct_duplicate",
+      "file": "cases/direct_duplicate.json",
+      "expect": "reject-before-canonicalization",
+      "reason": "The same literal property name appears twice in one object."
+    },
+    {
+      "id": "escaped_equivalent_duplicate",
+      "file": "cases/escaped_equivalent_duplicate.json",
+      "expect": "reject-before-canonicalization",
+      "reason": "An escaped property name decodes to the same string as another property name."
+    },
+    {
+      "id": "nested_duplicate",
+      "file": "cases/nested_duplicate.json",
+      "expect": "reject-before-canonicalization",
+      "reason": "A nested object contains duplicate property names."
+    },
+    {
+      "id": "array_nested_duplicate",
+      "file": "cases/array_nested_duplicate.json",
+      "expect": "reject-before-canonicalization",
+      "reason": "An object inside an array contains duplicate property names."
+    },
+    {
+      "id": "escaped_solidus_duplicate",
+      "file": "cases/escaped_solidus_duplicate.json",
+      "expect": "reject-before-canonicalization",
+      "reason": "Escaped and unescaped solidus property names decode to the same string."
+    }
+  ]
+}
