@@ -76,6 +76,7 @@ This crosses **3 modules** and involves **runtime state inheritance**. No regex 
 | File | Description |
 |------|-------------|
 | [`governance-protocol-spec.md`](./governance-protocol-spec.md) | Complete protocol specification (20 sections, 90+ KB) |
+| [`fixtures/duplicate_key_rejection_v1`](./fixtures/duplicate_key_rejection_v1/) | JSON duplicate-property rejection cases for pre-JCS input validity |
 | [`LICENSE.txt`](./LICENSE.txt) | CC-BY-4.0 license |
 
 ## Protocol at a Glance
