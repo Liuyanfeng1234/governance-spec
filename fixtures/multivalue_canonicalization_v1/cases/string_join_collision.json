@@ -1,0 +1,7 @@
+{
+  "field": "entities",
+  "separator": ",",
+  "list_x": ["US_SSN,PHONE", "EMAIL"],
+  "list_y": ["US_SSN", "PHONE,EMAIL"],
+  "expect": "join-collides-array-distinguishes"
+}

@@ -1,0 +1,10 @@
+{
+  "field": "scope",
+  "contract": "flat-string",
+  "separators": [":", ","],
+  "grammar": "scope = verdict \":\" entity *( \",\" entity )",
+  "value": "PII_BLOCKED:US_SSN,PHONE",
+  "forged_entity": "US_SSN,PHONE",
+  "expect": "reject-before-canonicalization",
+  "note": "The verdict and each entity are validated to contain no separator character. The forged entity 'US_SSN,PHONE' smuggles a comma and is rejected before any canonical bytes are produced."
+}

@@ -1,0 +1,7 @@
+{
+  "field": "evidence",
+  "semantics": "order-is-semantic",
+  "input_a": { "evidence": ["sig-a", "sig-b"] },
+  "input_b": { "evidence": ["sig-b", "sig-a"] },
+  "expect": "distinct-digests"
+}

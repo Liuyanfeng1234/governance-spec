@@ -1,0 +1,7 @@
+{
+  "field": "scopes",
+  "semantics": "set",
+  "input_a": { "scopes": ["billing:read", "audit:write", "billing:write"] },
+  "input_b": { "scopes": ["audit:write", "billing:write", "billing:read"] },
+  "expect": "equal-digests-after-set-normalization"
+}
