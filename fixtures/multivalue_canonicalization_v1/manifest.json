@@ -1,0 +1,36 @@
+{
+  "schema": "multivalue-canonicalization/v1",
+  "purpose": "Pin how a multi-value field becomes bytes so a content-addressed reference does not fork between two honest emitters.",
+  "normative_reference": {
+    "name": "RFC 8785",
+    "section": "3.2.3",
+    "requirement": "Array elements are serialized in the order given; canonicalization does not reorder them."
+  },
+  "rule": "A structured multi-value field is a JSON array with per-field semantics pinned (order-is-semantic or set); it is never string-joined. A field that is a string by contract closes separator collision by validation, a strictly weaker guarantee.",
+  "cases": [
+    {
+      "id": "order_is_semantic",
+      "file": "cases/order_is_semantic.json",
+      "expect": "distinct-digests",
+      "reason": "Order is load-bearing, so reordering the array is a different assertion and the digest must fork."
+    },
+    {
+      "id": "set_normalized",
+      "file": "cases/set_normalized.json",
+      "expect": "equal-digests-after-set-normalization",
+      "reason": "A set is sorted before the object is built, so two input orders recompute to one digest; without the sort they would differ."
+    },
+    {
+      "id": "string_join_collision",
+      "file": "cases/string_join_collision.json",
+      "expect": "join-collides-array-distinguishes",
+      "reason": "Two distinct lists join to the same separator string but canonicalize to distinct array bytes."
+    },
+    {
+      "id": "scope_separator_rejection",
+      "file": "cases/scope_separator_rejection.json",
+      "expect": "reject-before-canonicalization",
+      "reason": "A string-by-contract field rejects separator characters inside a value before any canonical bytes are produced."
+    }
+  ]
+}
