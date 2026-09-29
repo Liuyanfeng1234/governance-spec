@@ -75,8 +75,9 @@ This crosses **3 modules** and involves **runtime state inheritance**. No regex 
 
 | File | Description |
 |------|-------------|
-| [`governance-protocol-spec.md`](./governance-protocol-spec.md) | Complete protocol specification (20 sections, 90+ KB) |
+| [`governance-protocol-spec.md`](./governance-protocol-spec.md) | Complete protocol specification (20 sections) |
 | [`fixtures/duplicate_key_rejection_v1`](./fixtures/duplicate_key_rejection_v1/) | JSON duplicate-property rejection cases for pre-JCS input validity |
+| [`fixtures/multivalue_canonicalization_v1`](./fixtures/multivalue_canonicalization_v1/) | Multi-value field-shape and digest-invariant fixtures |
 | [`LICENSE.txt`](./LICENSE.txt) | CC-BY-4.0 license |
 
 ## Protocol at a Glance
