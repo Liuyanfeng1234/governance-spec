@@ -1,0 +1,51 @@
+{
+  "schema": "v19.canonical_envelope.interop.candidate-vectors/1",
+  "artifact_revision": "r2-p2-input-contract-correction",
+  "status": "proposal-candidate-not-conformance-certified",
+  "contract_schema": "v19.canonical_envelope.interop/1",
+  "supersedes": {
+    "commit": "2d4b623b1df6437212e8c8aff4e1f06c2063cc0e",
+    "vectors_sha256": "69f4ca9cbcdf7724611c85311720fa82bda951ff8f29d680eb93767344b7d572"
+  },
+  "input_rule": "UTF-8 encode the decoded input_json_text string without adding a newline",
+  "cases": [
+    {
+      "id": "P1-ascii-newline",
+      "expect": "ACCEPT",
+      "input_json_text": "{\"schema\":\"v19.canonical_envelope.interop/1\",\"profile\":\"synthetic-interop/1\",\"payload\":{\"z\":\"line\\nbreak\",\"a\":1}}",
+      "canonical_utf8_hex": "7b227061796c6f6164223a7b2261223a312c227a223a226c696e655c6e627265616b227d2c2270726f66696c65223a2273796e7468657469632d696e7465726f702f31222c22736368656d61223a227631392e63616e6f6e6963616c5f656e76656c6f70652e696e7465726f702f31227d",
+      "sha256_hex": "8efe4a1847c2e306499e83af0a892f2b79c6c1c62712e53e47b6e6405cf71100",
+      "local_two_path_byte_match": true
+    },
+    {
+      "id": "P2-utf16-number",
+      "expect": "REJECT_IJSON_NONCHARACTER",
+      "input_json_text": "{\"profile\":\"synthetic-interop/1\",\"payload\":{\"\\uFFFF\":2,\"\\uD83D\\uDE00\":1,\"n\":1e30},\"schema\":\"v19.canonical_envelope.interop/1\"}",
+      "complete_validator_executed": false
+    },
+    {
+      "id": "N1-duplicate-root",
+      "expect": "REJECT_DUPLICATE_MEMBER",
+      "input_json_text": "{\"schema\":\"v19.canonical_envelope.interop/1\",\"schema\":\"v19.canonical_envelope.interop/1\",\"profile\":\"synthetic-interop/1\",\"payload\":{}}",
+      "complete_validator_executed": false
+    },
+    {
+      "id": "N2-unknown-schema",
+      "expect": "REJECT_UNKNOWN_SCHEMA",
+      "input_json_text": "{\"schema\":\"v19.canonical_envelope.interop/2\",\"profile\":\"synthetic-interop/1\",\"payload\":{}}",
+      "complete_validator_executed": false
+    },
+    {
+      "id": "N3-extra-root",
+      "expect": "REJECT_EXTRA_ROOT_MEMBER",
+      "input_json_text": "{\"schema\":\"v19.canonical_envelope.interop/1\",\"profile\":\"synthetic-interop/1\",\"payload\":{},\"extra\":true}",
+      "complete_validator_executed": false
+    },
+    {
+      "id": "N4-lone-surrogate",
+      "expect": "REJECT_INVALID_UNICODE",
+      "input_json_text": "{\"schema\":\"v19.canonical_envelope.interop/1\",\"profile\":\"synthetic-interop/1\",\"payload\":{\"s\":\"\\uDEAD\"}}",
+      "complete_validator_executed": false
+    }
+  ]
+}
