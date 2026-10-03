@@ -1,7 +1,12 @@
 {
   "schema": "v19.canonical_envelope.interop.candidate-vectors/1",
+  "artifact_revision": "r2-p2-input-contract-correction",
   "status": "proposal-candidate-not-conformance-certified",
   "contract_schema": "v19.canonical_envelope.interop/1",
+  "supersedes": {
+    "commit": "2d4b623b1df6437212e8c8aff4e1f06c2063cc0e",
+    "vectors_sha256": "69f4ca9cbcdf7724611c85311720fa82bda951ff8f29d680eb93767344b7d572"
+  },
   "input_rule": "UTF-8 encode the decoded input_json_text string without adding a newline",
   "cases": [
     {
@@ -14,11 +19,9 @@
     },
     {
       "id": "P2-utf16-number",
-      "expect": "ACCEPT",
+      "expect": "REJECT_IJSON_NONCHARACTER",
       "input_json_text": "{\"profile\":\"synthetic-interop/1\",\"payload\":{\"\\uFFFF\":2,\"\\uD83D\\uDE00\":1,\"n\":1e30},\"schema\":\"v19.canonical_envelope.interop/1\"}",
-      "canonical_utf8_hex": "7b227061796c6f6164223a7b226e223a31652b33302c22f09f9880223a312c22efbfbf223a327d2c2270726f66696c65223a2273796e7468657469632d696e7465726f702f31222c22736368656d61223a227631392e63616e6f6e6963616c5f656e76656c6f70652e696e7465726f702f31227d",
-      "sha256_hex": "ec29fcfb02169866f21ed124640ff95e2b3d9910779b1b0c3ca883521a4e20bf",
-      "local_two_path_byte_match": true
+      "complete_validator_executed": false
     },
     {
       "id": "N1-duplicate-root",
